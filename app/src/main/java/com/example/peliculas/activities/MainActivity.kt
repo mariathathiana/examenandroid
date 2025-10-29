@@ -57,20 +57,21 @@ class MainActivity : AppCompatActivity() {
 
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
 
+        // Aquí agregas tu listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                return false
+                searchPeliculaPorTitulo(query) // Llama a tu función que hace la petición por título
+                return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                filteredPeliculaList = originalPeliculaList.filter { it.title.contains(newText, true) }
-                adapter.updateItems(filteredPeliculaList)
-                return true
+                return false // No hacemos nada mientras escriben, solo al enviar
             }
         })
 
         return true
     }
+
 
     fun getPeliculaList() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -95,4 +96,28 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    fun searchPeliculaPorTitulo(titulo: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val service = PeliculaService.getInstance()
+                val response = service.getPeliculaPorTitulo(titulo)
+
+                if (response.isSuccessful) {
+                    val pelicula = response.body()
+                    originalPeliculaList = pelicula?.let { listOf(it) } ?: emptyList()
+                    filteredPeliculaList = originalPeliculaList
+
+                    withContext(Dispatchers.Main) {
+                        adapter.updateItems(filteredPeliculaList)
+                    }
+                } else {
+                    println("Error: ${response.code()} - ${response.message()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
