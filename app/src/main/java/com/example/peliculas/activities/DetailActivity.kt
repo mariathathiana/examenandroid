@@ -11,6 +11,7 @@ import com.example.peliculas.R
 import com.example.peliculas.data.Pelicula
 import com.example.peliculas.data.PeliculaService
 import com.example.peliculas.databinding.ActivityDetailBinding
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -86,10 +87,6 @@ class DetailActivity : AppCompatActivity() {
         binding.paisTextView.text = pelicula.pais
 
         // Cargar el póster con Glide
-        Glide.with(this)
-            .load(pelicula.poster)
-            .placeholder(android.R.drawable.ic_menu_report_image)
-            .error(android.R.drawable.ic_menu_report_image)
-            .into(binding.posterImageView)
+        Picasso.get().load(pelicula.poster).into(binding.posterImageView)
     }
 }

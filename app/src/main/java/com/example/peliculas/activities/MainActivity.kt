@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 1)
 
-        getPeliculaList()
+        searchPeliculaPorTitulo("Matrix")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -73,29 +73,29 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun getPeliculaList() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val service = PeliculaService.getInstance()
-                val response = service.searchPeliculas("Guardians")
-                if (response.isSuccessful) {
-                    val peliculas = response.body()?.Search ?: emptyList()
-                    originalPeliculaList = peliculas
-                    filteredPeliculaList = peliculas
-
-                    withContext(Dispatchers.Main) {
-                        adapter.updateItems(filteredPeliculaList)
-                    }
-                } else {
-                    // Manejo de error HTTP
-                    println("Error: ${response.code()} - ${response.message()}")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-    }
+//    fun getPeliculaList() {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val service = PeliculaService.getInstance()
+//                val response = service.searchPeliculas("Matrix")
+//                if (response.isSuccessful) {
+//                    val peliculas = response.body()?.Search ?: emptyList()
+//                    originalPeliculaList = peliculas
+//                    filteredPeliculaList = peliculas
+//
+//                    withContext(Dispatchers.Main) {
+//                        adapter.updateItems(filteredPeliculaList)
+//                    }
+//                } else {
+//                    // Manejo de error HTTP
+//                    println("Error: ${response.code()} - ${response.message()}")
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//
+//    }
 
     fun searchPeliculaPorTitulo(titulo: String) {
         CoroutineScope(Dispatchers.IO).launch {
