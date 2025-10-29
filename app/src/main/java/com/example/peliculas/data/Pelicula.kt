@@ -13,7 +13,7 @@ data class Pelicula(
     @SerializedName("Poster") val poster: String,
     @SerializedName("Genre") val genre: String,
     @SerializedName("imdbID") val imdbID: String,
-    @SerializedName("Pais") val pais: String,
+    @SerializedName("Country") val pais: String,
     @SerializedName("Director") val director: String,
 
 )

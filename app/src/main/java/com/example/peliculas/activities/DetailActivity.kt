@@ -73,6 +73,7 @@ class DetailActivity : AppCompatActivity() {
         binding.releasedRuntimeTextView.text = "Estreno: ${pelicula.released} | ${pelicula.runtime}"
         binding.plotTextView.text = pelicula.plot
         binding.directorTextView.text =pelicula.director
+        binding.paisTextView.text = pelicula.pais
 
         // Cargar el póster con Glide
         Glide.with(this)
