@@ -101,11 +101,11 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val service = PeliculaService.getInstance()
-                val response = service.getPeliculaPorTitulo(titulo)
+                val response = service.searchPeliculas(titulo)
 
                 if (response.isSuccessful) {
-                    val pelicula = response.body()
-                    originalPeliculaList = pelicula?.let { listOf(it) } ?: emptyList()
+                    val peliculas = response.body()!!.Search
+                    originalPeliculaList = peliculas
                     filteredPeliculaList = originalPeliculaList
 
                     withContext(Dispatchers.Main) {
