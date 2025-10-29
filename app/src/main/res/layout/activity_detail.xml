@@ -41,6 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,6 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/yearRatedTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,23 +65,38 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/genreTypeTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Estreno: 01 Jan 2023 | 121 min" />
 
-        <!-- Trama / Descripción -->
+        <!-- Director -->
+        <TextView
+            android:id="@+id/directorTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/releasedRuntimeTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Director: James Gunn" />
+
+        <!-- Trama / Descripción (plot) -->
         <TextView
             android:id="@+id/plotTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:textSize="16sp"
             android:textColor="@android:color/black"
-            app:layout_constraintTop_toBottomOf="@id/releasedRuntimeTextView"
+            app:layout_constraintTop_toBottomOf="@id/directorTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Peter Quill y los Guardianes de la Galaxia deben luchar para mantener unida a su familia..." />
+
 
         <!-- Botón para ver póster en detalle o abrir enlace -->
         <Button
@@ -88,10 +105,11 @@
             android:layout_height="wrap_content"
             android:text="Ver póster"
             android:drawableStart="@android:drawable/ic_menu_view"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="30dp"
             app:layout_constraintTop_toBottomOf="@id/plotTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/blue"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
