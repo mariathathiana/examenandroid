@@ -45,6 +45,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofit")
     implementation("com.squareup.retrofit2:converter-gson:$retrofit")
 
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+
 
     // Picasso
     implementation("com.squareup.picasso:picasso:2.8")

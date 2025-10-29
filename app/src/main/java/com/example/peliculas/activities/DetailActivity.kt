@@ -1,70 +1,83 @@
 package com.example.peliculas.activities
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.peliculas.R
+import com.bumptech.glide.Glide
 import com.example.peliculas.data.Pelicula
 import com.example.peliculas.data.PeliculaService
 import com.example.peliculas.databinding.ActivityDetailBinding
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailActivity : AppCompatActivity() {
-    lateinit var binding: ActivityDetailBinding
 
-    lateinit var pelicula: Pelicula
+    private lateinit var binding: ActivityDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        // Obtener el imdbID enviado desde MainActivity
+        val imdbID = intent.getStringExtra("Pelicula_ID")
+        if (imdbID != null) {
+            fetchPeliculaDetails(imdbID)
+        } else {
+            Toast.makeText(this, "ID de película no recibido", Toast.LENGTH_SHORT).show()
+            finish()
         }
 
-        val id = intent.getStringExtra("Pelicula_ID")!!
-
-        getPelicula(id)
-    }
-
-    private fun loadData() {
-        supportActionBar?.title = pelicula.title
-        binding.descriptionTextView.text = pelicula.plot
-        Picasso.get().load(pelicula.poster).into(binding.posterImageView)
-
+        // Click del botón para ver póster en grande
         binding.playButton.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, pelicula.poster.toUri())
-            startActivity(browserIntent)
+            Toast.makeText(this, "Función de ver póster aún no implementada", Toast.LENGTH_SHORT).show()
         }
     }
 
-
-    private fun getPelicula(id: String) {
+    private fun fetchPeliculaDetails(imdbID: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val service = PeliculaService.getInstance()
-                val response = service.getPeliculaPorId(id)
+                val response = service.getPeliculaPorId(imdbID)
                 if (response.isSuccessful) {
-                    pelicula = response.body()!!
-                    CoroutineScope(Dispatchers.Main).launch {
-                        loadData()
+                    val pelicula = response.body()
+                    if (pelicula != null) {
+                        withContext(Dispatchers.Main) {
+                            bindDataToViews(pelicula)
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@DetailActivity, "Película no encontrada", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@DetailActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DetailActivity, "Error de red", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
+    private fun bindDataToViews(pelicula: Pelicula) {
+        binding.titleTextView.text = pelicula.title
+        binding.yearRatedTextView.text = "${pelicula.year} | ${pelicula.rated}"
+        binding.genreTypeTextView.text = "${pelicula.genre} | ${pelicula.type}"
+        binding.releasedRuntimeTextView.text = "Estreno: ${pelicula.released} | ${pelicula.runtime}"
+        binding.plotTextView.text = pelicula.plot
 
+        // Cargar el póster con Glide
+        Glide.with(this)
+            .load(pelicula.poster)
+            .placeholder(android.R.drawable.ic_menu_report_image)
+            .error(android.R.drawable.ic_menu_report_image)
+            .into(binding.posterImageView)
+    }
 }
